@@ -19,18 +19,18 @@ public class ServiceAController {
 
   public static final String URL = "http://localhost:8081";
 
-  @GetMapping("/getById/{id}")
+  @GetMapping("/getById/{id}/{name}")
   @CircuitBreaker(name = "serviceA", fallbackMethod = "serviceAFallback")
-  public String serviceA(@PathVariable("id") Long id) {
-    log.info("incoming variable {}", id);
+  public String serviceA(@PathVariable("id") Long id, @PathVariable("name") String name) {
+    log.info("incoming variables {} and {}", id, name);
     String str= null;
     str.length();
     int x = 1/0;
     return restTemplate.getForObject(URL + "/b", String.class);
   }
 
-  public String serviceAFallback(Long id, Exception ex) {
-    log.info("incoming variable in fallback{}", id);
+  public String serviceAFallback(Long id, String name, Exception ex) {
+    log.info("incoming variables in fallback {} and {}", id, name);
     log.info("exception type {} =>  and Nullpointer=> {}", ex.getMessage(), ex instanceof NullPointerException);
     return "this is service B fallback";
   }
